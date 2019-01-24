@@ -205,12 +205,4 @@ void setup() {
       }
     }
   }
-
-// print GAME OVER
-  display.setTextSize(2);      // Normal 1:1 pixel scale
-  display.setTextColor(WHITE); // Draw white text
-  display.setCursor(10, 20);     // Start at top-left corner
-  display.println("GAME OVER");
-  display.display();
-  delay(20000);
 }
