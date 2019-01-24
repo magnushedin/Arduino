@@ -4,6 +4,7 @@
 #include <Adafruit_SSD1306.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <EEPROM.h>
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -54,8 +55,14 @@ void setup() {
   int y_angle = 2;
   brick bricks[BRICKS];
   int gspeed = 1;
+  int ee_address = 0;
+  int high_score = 0;
+  int store_score = 1;
 
   Serial.begin(9600);
+
+// read high score
+  high_score = EEPROM.read(ee_address);
 
 // init the rack
   rack.x_start = 0;
@@ -121,9 +128,12 @@ void setup() {
     }
 
 // print points
-display.setTextSize(1);
+    display.setTextSize(1);
     display.setCursor(0, 0);     // Start at top-left corner
-    display.println(String(points));
+    display.print("Score: ");
+    display.print(String(points));
+    display.print("  High: ");
+    display.print(String(high_score));
 
 // print bricks
     for (int i=0; i<BRICKS; i++) {
@@ -183,7 +193,16 @@ display.setTextSize(1);
       display.setTextColor(WHITE); // Draw white text
       display.setCursor(10, 20);     // Start at top-left corner
       display.println("GAME OVER");
-      display.display();      
+      if ((store_score == 1) && (points > high_score)) {
+        display.setTextSize(1);
+        display.print("      New high!");
+      }
+      display.display();
+      if ((store_score == 1) && (points > high_score)) {
+        store_score = 0;
+        EEPROM.write(ee_address, points); 
+        Serial.println("store in eeprom");
+      }
     }
   }
 
