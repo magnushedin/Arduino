@@ -53,6 +53,7 @@ void setup() {
   int x_angle = 2;
   int y_angle = 2;
   brick bricks[BRICKS];
+  int gspeed = 1;
 
   Serial.begin(9600);
 
@@ -103,6 +104,7 @@ void setup() {
 
 // reset bricks if all gone
   if (all_bricks_gone(bricks)) {
+    gspeed++;
     for (int i=0; i<BRICKS; i++) {
       bricks[i].visible = 1;
     }
@@ -153,12 +155,12 @@ display.setTextSize(1);
       y_dir = -1;
       if ((rack.x_start <= (x_start+5)) && (rack.x_end > x_start-2)) {
         if (((x_start+1) <= (rack.x_start+6)) || ((x_start+1) >= rack.x_end-6)) {
-          y_angle = 2;
-          x_angle = 4;
+          y_angle = 1*gspeed;
+          x_angle = 2*gspeed;
         }
         else {
-          y_angle = 4;
-          x_angle = 2;
+          y_angle = 2*gspeed;
+          x_angle = 1*gspeed;
         }
       }
       else {
@@ -184,4 +186,12 @@ display.setTextSize(1);
       display.display();      
     }
   }
+
+// print GAME OVER
+  display.setTextSize(2);      // Normal 1:1 pixel scale
+  display.setTextColor(WHITE); // Draw white text
+  display.setCursor(10, 20);     // Start at top-left corner
+  display.println("GAME OVER");
+  display.display();
+  delay(20000);
 }
